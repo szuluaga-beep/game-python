@@ -20,6 +20,7 @@ export function QuizGame() {
   const [showExplanation, setShowExplanation] = useState(false)
   const [previousScores, setPreviousScores] = useState<QuizScore[]>([])
   const [startTime, setStartTime] = useState<number>(0)
+  const [totalTimeSpent, setTotalTimeSpent] = useState<number>(0)
 
   useEffect(() => {
     const scores = getScores()
@@ -45,23 +46,28 @@ export function QuizGame() {
   }, [isAnswered])
 
   const handleNext = () => {
+    const timeSpentOnQuestion = Math.round((Date.now() - startTime) / 1000)
+    const newTotalTime = totalTimeSpent + timeSpentOnQuestion
+
     if (currentQuestionIndex < questions.length - 1) {
+      setTotalTimeSpent(newTotalTime)
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setIsAnswered(false)
       setShowExplanation(false)
+      setStartTime(Date.now()) // Reinicia el cronómetro para la siguiente pregunta
     } else {
       // Quiz completado
       const correctAnswers = selectedAnswers.filter(
         (answer, index) => answer === questions[index].correctAnswer
       ).length
       
-      const timeSpent = Math.round((Date.now() - startTime) / 1000)
-      const finalScore = calculateScore(correctAnswers, questions.length, timeSpent)
+      const finalTimeSpent = newTotalTime
+      const finalScore = calculateScore(correctAnswers, questions.length, finalTimeSpent)
 
       const score: QuizScore = {
         totalQuestions: questions.length,
         correctAnswers,
-        timeSpent,
+        timeSpent: finalTimeSpent,
         finalScore,
         completedAt: new Date().toISOString(),
       }
@@ -164,8 +170,8 @@ export function QuizGame() {
       (answer, index) => answer === questions[index].correctAnswer
     ).length
     
-    const timeSpent = Math.round((Date.now() - startTime) / 1000)
-    const finalScore = calculateScore(correctAnswers, questions.length, timeSpent)
+    const finalTimeSpent = totalTimeSpent + Math.round((Date.now() - startTime) / 1000)
+    const finalScore = calculateScore(correctAnswers, questions.length, finalTimeSpent)
 
     return (
       <div className="max-w-2xl mx-auto">
@@ -175,7 +181,7 @@ export function QuizGame() {
           onRestart={handleRestart}
           previousScores={previousScores}
           finalScore={finalScore}
-          timeSpent={timeSpent}
+          timeSpent={finalTimeSpent}
         />
       </div>
     )
@@ -188,7 +194,10 @@ export function QuizGame() {
       <Timer
         duration={TIMER_DURATION}
         onTimeUp={handleTimeUp}
-        isActive
+        isActive={true}
+        currentQuestion={currentQuestionIndex}
+        totalQuestions={questions.length}
+        totalTimeSpent={totalTimeSpent}
       />
 
       <QuestionCard
