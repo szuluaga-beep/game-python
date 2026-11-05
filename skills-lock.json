@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "tanstack-start-best-practices": {
+      "source": "deckardger/tanstack-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/tanstack-start/SKILL.md",
+      "computedHash": "6fc068236d1a35ad2755b559a4ab616115cfda48d9c0fc70dd7d2ece98c665ee"
+    }
+  }
+}
