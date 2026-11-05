@@ -13,9 +13,13 @@ interface TimerProps {
 export function Timer({ duration, onTimeUp, isActive, currentQuestion, totalQuestions, totalTimeSpent }: TimerProps) {
   const [timeLeft, setTimeLeft] = useState(duration)
 
+  // Reinicia el cronómetro cuando cambia de pregunta
+  useEffect(() => {
+    setTimeLeft(duration)
+  }, [currentQuestion, duration])
+
   useEffect(() => {
     if (!isActive) {
-      setTimeLeft(duration)
       return
     }
 
