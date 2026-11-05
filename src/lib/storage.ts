@@ -1,4 +1,5 @@
 export type QuizScore = {
+  participantName: string
   totalQuestions: number
   correctAnswers: number
   timeSpent: number

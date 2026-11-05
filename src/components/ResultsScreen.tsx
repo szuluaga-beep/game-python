@@ -8,6 +8,7 @@ interface ResultsScreenProps {
   previousScores: QuizScore[]
   finalScore: number
   timeSpent: number
+  participantName: string
 }
 
 export function ResultsScreen({
@@ -17,6 +18,7 @@ export function ResultsScreen({
   previousScores,
   finalScore,
   timeSpent,
+  participantName,
 }: ResultsScreenProps) {
   const percentage = Math.round((score / totalQuestions) * 100)
   const maxScore = previousScores.length > 0
@@ -39,6 +41,7 @@ export function ResultsScreen({
       <div className="text-center space-y-4">
         <Trophy className="w-16 h-16 mx-auto text-yellow-500" />
         <h1 className="text-4xl font-bold text-gray-800">¡Quiz Completado!</h1>
+        <p className="text-2xl text-blue-600 font-bold">{participantName}</p>
         <p className="text-xl text-gray-600">{getPerformanceMessage(finalScore)}</p>
       </div>
 
@@ -69,14 +72,17 @@ export function ResultsScreen({
         <div className="p-6 bg-indigo-50 rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 className="w-5 h-5 text-indigo-600" />
-            <h3 className="font-bold text-gray-800">Tus Intentos Anteriores</h3>
+            <h3 className="font-bold text-gray-800">Historial de Intentos</h3>
           </div>
           <div className="space-y-2">
             {previousScores.map((score, idx) => {
               const scorePercentage = Math.round((score.correctAnswers / score.totalQuestions) * 100)
               return (
                 <div key={idx} className="flex justify-between items-center p-3 bg-white rounded border border-indigo-200">
-                  <span className="text-gray-700 font-medium">Intento {idx + 1}:</span>
+                  <div>
+                    <span className="text-gray-700 font-medium">Intento {idx + 1}</span>
+                    <div className="text-sm text-gray-500">{score.participantName}</div>
+                  </div>
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-gray-600">{scorePercentage}%</span>
                     <span className="font-bold text-indigo-600">{score.finalScore}/110</span>

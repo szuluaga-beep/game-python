@@ -67,6 +67,7 @@ export function QuizGame() {
       const finalScore = calculateScore(correctAnswers, questions.length, finalTimeSpent)
 
       const score: QuizScore = {
+        participantName,
         totalQuestions: questions.length,
         correctAnswers,
         timeSpent: finalTimeSpent,
@@ -196,6 +197,7 @@ export function QuizGame() {
           previousScores={previousScores}
           finalScore={finalScore}
           timeSpent={finalTimeSpent}
+          participantName={participantName}
         />
       </div>
     )
