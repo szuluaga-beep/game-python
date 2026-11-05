@@ -6,12 +6,14 @@ import { ProgressBar } from './ProgressBar'
 import { Timer } from './Timer'
 import { QuestionCard } from './QuestionCard'
 import { ResultsScreen } from './ResultsScreen'
+import { WelcomeScreen } from './WelcomeScreen'
 import { Play } from 'lucide-react'
 
 const TIMER_DURATION = 60
 
 export function QuizGame() {
-  const [gameState, setGameState] = useState<'start' | 'playing' | 'completed'>('start')
+  const [gameState, setGameState] = useState<'welcome' | 'start' | 'playing' | 'completed'>('welcome')
+  const [participantName, setParticipantName] = useState('')
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(
     new Array(questions.length).fill(null)
@@ -79,11 +81,19 @@ export function QuizGame() {
   }
 
   const handleRestart = () => {
-    setGameState('start')
+    setGameState('welcome')
+    setParticipantName('')
     setCurrentQuestionIndex(0)
     setSelectedAnswers(new Array(questions.length).fill(null))
     setIsAnswered(false)
     setShowExplanation(false)
+    setTotalTimeSpent(0)
+    setStartTime(0)
+  }
+
+  const handleWelcome = (name: string) => {
+    setParticipantName(name)
+    setGameState('start')
   }
 
   const handleStart = () => {
@@ -91,11 +101,15 @@ export function QuizGame() {
     setStartTime(Date.now())
   }
 
+  if (gameState === 'welcome') {
+    return <WelcomeScreen onStart={handleWelcome} />
+  }
+
   if (gameState === 'start') {
     return (
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-gray-800">Python Quiz</h1>
+          <h1 className="text-5xl font-bold text-gray-800">Hola, {participantName}! 👋</h1>
           <p className="text-xl text-gray-600">
             Aprende Listas, Diccionarios y Funciones en Python
           </p>
